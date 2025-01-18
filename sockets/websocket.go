@@ -1,17 +1,20 @@
 package sockets
 
 import (
+	"bytes"
 	"fmt"
+	"image"
+	"image/jpeg"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.org/akrck02/nightfall/constants"
 )
 
 var upgrader = websocket.Upgrader{}
 var connections = []*websocket.Conn{} 
 
+// Start websocket server
 func Start() {
   http.HandleFunc("/game", func(w http.ResponseWriter, r *http.Request) { 
       
@@ -31,9 +34,9 @@ func Start() {
   })
 
   http.ListenAndServe("0.0.0.0:4321", nil)
-
 }
 
+// Close the active connections
 func CloseConnections() {
   for _,conn := range connections {
     conn.Close()
@@ -42,27 +45,26 @@ func CloseConnections() {
   connections = []*websocket.Conn{}
 }
 
-func SendFrameAsHtml(frame [][]uint32) {
+// Send a frame to every active connection
+func SendFrame(frame *image.RGBA) {
 
-  var html = ``
-  for i, pixel := range frame {
-    if i % constants.Resolution[1] == 0 {
-      html += `</div><div id="display-row" style="display:flex;flex-direction:row;">`
-    } 
-    
-    html += fmt.Sprintf(`<div id="pixel" style="background:rgba(%d,%d,%d,%d);width:1rem;height:1rem;color:transparent;">.</div>`, pixel[0],pixel[1],pixel[2], 1)
-  }
+  buf := new(bytes.Buffer)
+  err := jpeg.Encode(buf, frame, nil)
+  if nil != err {
+    print("Cannot generate: frame skipped.")
+    return 
+  } 
+
+  bytesToSend := buf.Bytes()
 
   println("FRAME STATE:")
   for _, conn := range connections {
 
-    println("Sending frame to ")
-    println(conn)
-    
-    err := conn.WriteMessage(websocket.BinaryMessage, []byte(html))
+    println(fmt.Sprintf("Sending frame to %s", conn.LocalAddr().String()))
+    err := conn.WriteMessage(websocket.BinaryMessage, bytesToSend)
     if (nil != err){
       print("ERROR: ")
       println(err.Error())
-    }
+    } 
   }
 }
