@@ -6,8 +6,3 @@ type Node struct {
 	Y      int
 	Sprite rune
 }
-
-type (
-	UpdateFunction func(delta int)
-	DrawFunction   func()
-)
