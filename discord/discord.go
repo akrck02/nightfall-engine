@@ -1,46 +1,42 @@
-package main
+package discord
 
 import (
 	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+
+	"github.org/akrck02/nightfall/configuration"
 )
 
-func main() {
-	dg, err := discordgo.New("Bot " + configuration.Global.DiscordBotToken)
+var session *discordgo.Session
+
+func Start() {
+	var err error
+	session, err = discordgo.New("Bot " + configuration.Global.DiscordBotToken)
 	if err != nil {
 		panic(err)
 	}
 
-	dg.AddHandler(ready)
+	session.AddHandler(ready)
 
 	// We need information about guilds (which includes their channels),
 	// messages and voice states.
-	dg.Identify.Intents = discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates
+	session.Identify.Intents = discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates
 
 	// Open the websocket and begin listening.
-	err = dg.Open()
+	err = session.Open()
 	if err != nil {
 		fmt.Println("Error opening Discord session: ", err)
 	}
+}
 
-	// Wait here until CTRL-C or other term signal is received.
-	fmt.Println("Mewbot is now running.  Press CTRL-C to exit.")
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
-	<-sc
-
-	// Cleanly close down the Discord session.
-	dg.Close()
+func Stop() {
+	session.Close()
 }
 
 // Set ready function
 func ready(s *discordgo.Session, event *discordgo.Ready) {
-	// Set the playing status.
-	s.UpdateGameStatus(1, "meow meow.")
-	commands.SyncCommands(s, "")
-	commands.SetCommands(s)
+	s.UpdateGameStatus(1, "Gaming 🎮.")
+	SyncCommands(s, "")
+	SetCommands(s)
 }
