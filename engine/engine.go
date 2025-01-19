@@ -5,7 +5,6 @@ import (
 	"image"
 	"image/color"
 	"image/jpeg"
-	"math/rand"
 
 	"github.org/akrck02/nightfall/constants"
 	"github.org/akrck02/nightfall/models"
@@ -15,6 +14,9 @@ var (
 	screen image.RGBA              = *image.NewRGBA(image.Rect(0, 0, constants.ScreenWidth, constants.ScreenHeight))
 	nodes  map[string]*models.Node = map[string]*models.Node{}
 )
+
+func loadResources() {
+}
 
 // Render the game frame and send to clients
 func Draw() {
@@ -26,12 +28,11 @@ func Update(delta int) {
 	for y := range constants.ScreenHeight {
 		for x := range constants.ScreenWidth {
 			screen.Set(x, y, color.RGBA{
-				uint8(rand.Intn(255)),
-				uint8(rand.Intn(255)),
-				uint8(rand.Intn(255)),
+				uint8(20),
+				uint8(20),
+				uint8(20),
 				uint8(255),
 			})
-			// println(fmt.Sprintf("color for (%d,%d) %v", x, y, screen.At(x, y)))
 		}
 	}
 

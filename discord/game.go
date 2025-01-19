@@ -22,11 +22,48 @@ func GetFrame(session *discordgo.Session, interactionCreate *discordgo.Interacti
 	}
 	session.InteractionRespond(interactionCreate.Interaction, &currentInteraction)
 
+	// Controls
+	controls := []discordgo.MessageComponent{
+		discordgo.ActionsRow{
+			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					CustomID: "MoveLeft",
+					Emoji:    &discordgo.ComponentEmoji{Name: "⬅️"},
+					Label:    "",
+					Style:    discordgo.SecondaryButton,
+				},
+				discordgo.Button{
+					CustomID: "MoveRight",
+					Emoji:    &discordgo.ComponentEmoji{Name: "➡️"},
+					Label:    "",
+					Style:    discordgo.SecondaryButton,
+				},
+				discordgo.Button{
+					CustomID: "MoveUp",
+					Emoji:    &discordgo.ComponentEmoji{Name: "⬆️"},
+					Label:    "",
+					Style:    discordgo.SecondaryButton,
+				},
+				discordgo.Button{
+					CustomID: "MoveDown",
+					Emoji:    &discordgo.ComponentEmoji{Name: "⬇️"},
+					Label:    "",
+					Style:    discordgo.SecondaryButton,
+				},
+				discordgo.Button{
+					CustomID: "Interact",
+					Emoji:    &discordgo.ComponentEmoji{Name: "🅰️"},
+					Label:    "",
+					Style:    discordgo.SecondaryButton,
+				},
+			},
+		},
+	}
+
 	// Create edit for response
-	newMessage := "--------------------GAME----------------------"
 	newContent := discordgo.WebhookEdit{
-		Content: &newMessage,
-		Files:   []*discordgo.File{},
+		Files:      []*discordgo.File{},
+		Components: &controls,
 	}
 
 	// Get current frame
