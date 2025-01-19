@@ -1,8 +1,8 @@
 package constants
 
 var (
-	ScreenWidth  int = 1920
-	ScreenHeight int = 1080
+	ScreenWidth  int = 1280
+	ScreenHeight int = 720
 )
 
 const (

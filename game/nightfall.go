@@ -20,6 +20,8 @@ func Start() {
 	updateCount := 0 // Counter for updates
 	stats.Ups = 0
 
+	LoadMap()
+
 	for running {
 		select {
 		case <-ticker.C:
