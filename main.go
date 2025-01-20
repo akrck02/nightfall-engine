@@ -9,6 +9,7 @@ import (
 
 	"github.org/akrck02/nightfall/discord"
 	"github.org/akrck02/nightfall/game"
+	sockets "github.org/akrck02/nightfall/websockets"
 )
 
 func main() {
@@ -23,9 +24,15 @@ func main() {
 	}()
 
 	// Start discord server
+	//go func() {
+	//	defer wg.Done()
+	//	discord.Start()
+	//}()
+
+	// Start websocket server
 	go func() {
 		defer wg.Done()
-		discord.Start()
+		sockets.Start()
 	}()
 
 	// Wait here until CTRL-C or other term signal is received.

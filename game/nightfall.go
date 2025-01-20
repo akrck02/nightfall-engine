@@ -6,6 +6,7 @@ import (
 	"github.org/akrck02/nightfall/constants"
 	"github.org/akrck02/nightfall/engine"
 	"github.org/akrck02/nightfall/stats"
+	sockets "github.org/akrck02/nightfall/websockets"
 )
 
 var running = true
@@ -34,6 +35,7 @@ func Start() {
 
 			if elapsed >= updateInterval {
 				engine.Update(int(elapsed.Nanoseconds()))
+				sockets.SendFrame()
 				updateCount++ // Increment update counter
 				lastUpdate = currentTime
 			}
